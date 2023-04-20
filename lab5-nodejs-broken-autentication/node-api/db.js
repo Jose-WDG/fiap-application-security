@@ -8,8 +8,8 @@ async function connect(){
     const connection = await mysql.createConnection({
         host: process.env.DB_HOST || 'localhost',
         port: 3306,
-        user: 'test',
-        password: 'test',
+        user: 'root',
+        password: '',
         database: 'lab5',
         multipleStatements: true
       } );
@@ -44,11 +44,22 @@ async function selectUserByLogin(user, password){
         const [rows, fields] = await conn.execute(query, [user, password]);
         return rows;
     }catch(err){
-        console.err(err);
+        console.log(err);
         throw {code: 500, message: 'Erro inesperado ao tentar logar usuário'};
     }
 }
 
+async function selectUserByLogin(user){
+    const conn = await connect();
+    
+    const query = "SELECT * FROM `users` WHERE `user` = ?;";
+    console.log(`Executando query: ${query}`);
+    
+    const [rows, fields] = await connection.execute(query, [user]);
+
+    return rows;
+ }
+ 
 async function insertUser(user, password){
     const conn = await connect();
 
